@@ -1,0 +1,41 @@
+/* my css comes here */
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  background: black;
+  color: azure;
+  height: 100vh;
+}
+
+.left {
+  width: 60%;
+  padding: 25px;
+  border: 1px solid orangered;
+  border-radius: 10px;
+}
+
+.title_text{
+  color:orangered;
+}
+
+.btn{
+  padding: 10px;
+  margin:10px;
+}
+
+.record_btn{
+  background: orangered;
+  color:azure;
+  text-decoration: none;
+  border: 1px solid azure;
+}
+
+.record_btn:hover{
+  background:rgb(208, 57, 2);
+  border: 1.2px solid azure;
+  transition: 0.3s;
+}

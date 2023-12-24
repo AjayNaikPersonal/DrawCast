@@ -1,0 +1,22 @@
+{
+    "manifest_version": 2,
+    "name": "DrawCast",
+    "version": "1.0",
+    "description": "Inject pencil button into all Chrome tabs",
+    "permissions": ["activeTab", "storage", "webNavigation", "<all_urls>"],
+    "background": {
+      "scripts": ["background.js"],
+      "persistent": false
+    },
+    "browser_action": {
+      "default_popup": "index.html"
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["src/components/Injector.jsx"],
+        "all_frames": true
+      }
+    ]
+  }
+  
