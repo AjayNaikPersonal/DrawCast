@@ -128,6 +128,11 @@ function myEditpencilDrawBtn() {
 
                     // the drag is over, clear the dragging flag
                     isDown = false;
+                    var endX = parseInt(e.clientX - offsetX);
+                    var endY = parseInt(e.clientY - offsetY);
+                    var width = endX - startX;
+                    var height = endY - startY;
+                    createTooltip(width, height);
                 }
 
                 function handleMouseOut(e) {
@@ -180,6 +185,48 @@ function myEditpencilDrawBtn() {
                 $("#canvas").mouseout(function (e) {
                     handleMouseOut(e);
                 });
+
+
+                function createTooltip(rectangleWidth, rectangleHeight) {
+                    // Create a tooltip element
+                    tooltip = document.createElement('div');
+                    tooltip.style.position = 'fixed';
+                    tooltip.style.border = '1px solid black';
+                    tooltip.style.width = '120px';
+                    tooltip.style.height = '100px';
+                    tooltip.style.color = 'black';
+                    tooltip.style.background = 'violet';
+                    tooltip.style.padding = '5px';
+                    tooltip.style.zIndex = '1000';
+                    tooltip.style.borderRadius = "10px";
+                    tooltip.contentEditable = 'true'; // Allow editing
+                    tooltip.innerHTML = 'Type your text here';
+                
+                    // Create a triangle (pseudo-element) pointing to the left
+                    var triangle = document.createElement('div');
+                    triangle.style.content = '';
+                    triangle.style.position = 'absolute';
+                    triangle.style.top = '50%';
+                    triangle.style.right = '128px'; // Adjust as needed
+                    triangle.style.width = '0';
+                    triangle.style.height = '0';
+                    triangle.style.borderStyle = 'solid';
+                    triangle.style.borderWidth = '10px 15px 10px 0'; // Adjust as needed
+                    triangle.style.borderColor = 'transparent violet transparent transparent';
+
+                    // Append the triangle to the tooltip
+                    tooltip.appendChild(triangle);
+
+                    // Append the triangle to the tooltip
+                    tooltip.appendChild(triangle);
+
+                    // Position the tooltip to the right of the rectangle
+                    tooltip.style.left = (startX + rectangleWidth + 10) + 'px';
+                    tooltip.style.top = startY + 'px';
+                
+                    // Append the tooltip to the body
+                    document.body.appendChild(tooltip);
+                }
             }
         }
     }
