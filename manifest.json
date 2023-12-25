@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "DrawCast",
     "version": "1.0",
-    "description": "Inject pencil button into all Chrome tabs",
+    "description": "Drawcast is an innovative screen recording application that seamlessly integrates live drawing and editing features,empowering content creators to annotate and explain on-screen elements in real-time.",
     "permissions": ["activeTab", "storage", "webNavigation", "<all_urls>"],
     "background": {
       "scripts": ["background.js"],
