@@ -62,10 +62,14 @@ function myEditpencilDrawBtn() {
         function toggleOverlay() {
             const overlayId = 'canvas';
             const overlay = document.getElementById(overlayId);
+            const tooltips = document.getElementsByClassName('tooltip_div');
 
             if (overlay) {
                 // If the overlay is present, remove it
                 overlay.remove();
+                while (tooltips.length > 0) {
+                    tooltips[0].remove();
+                }
             } else {
                 createCanvas();
             }
@@ -186,40 +190,74 @@ function myEditpencilDrawBtn() {
                     handleMouseOut(e);
                 });
 
-
                 function createTooltip(rectangleWidth, rectangleHeight) {
                     // Create a tooltip element
-                    tooltip = document.createElement('div');
+                    var tooltip = document.createElement('div');
+                    tooltip.classList.add('tooltip_div');
                     tooltip.style.position = 'fixed';
-                    tooltip.style.border = '1px solid black';
                     tooltip.style.width = '120px';
-                    tooltip.style.height = '100px';
                     tooltip.style.color = 'black';
+                    tooltip.style.fontWeight = 'bold';
+                    tooltip.style.minHeight = '50px';
                     tooltip.style.background = 'violet';
                     tooltip.style.padding = '5px';
                     tooltip.style.zIndex = '1000';
-                    tooltip.style.borderRadius = "10px";
+                    tooltip.style.borderRadius = "0 10px 10px 10px"; // Adjust the border-radius for the pointy left side
                     tooltip.contentEditable = 'true'; // Allow editing
-                    tooltip.innerHTML = 'Type your text here';
                 
-                    // Create a triangle (pseudo-element) pointing to the left
-                    var triangle = document.createElement('div');
-                    triangle.style.content = '';
-                    triangle.style.position = 'absolute';
-                    triangle.style.top = '50%';
-                    triangle.style.right = '128px'; // Adjust as needed
-                    triangle.style.width = '0';
-                    triangle.style.height = '0';
-                    triangle.style.borderStyle = 'solid';
-                    triangle.style.borderWidth = '10px 15px 10px 0'; // Adjust as needed
-                    triangle.style.borderColor = 'transparent violet transparent transparent';
-
-                    // Append the triangle to the tooltip
-                    tooltip.appendChild(triangle);
-
-                    // Append the triangle to the tooltip
-                    tooltip.appendChild(triangle);
-
+                    // Create a span tag inside the tooltip with a microphone emoji
+                    var spanTag = document.createElement('span');
+                    spanTag.innerHTML = '🎤';
+                    spanTag.style.cursor = 'pointer'; // Set the cursor to pointer
+                
+                    // Add click event listener to the span tag
+                    spanTag.addEventListener('click', function () {
+                        // Request access to the user's microphone
+                        navigator.mediaDevices.getUserMedia({ audio: true })
+                            .then(function (stream) {
+                                // Create a SpeechRecognition object
+                                var recognition = new window.webkitSpeechRecognition(); // Use the Webkit version for Chrome
+                
+                                // Set the language for speech recognition (adjust as needed)
+                                recognition.lang = 'en-US';
+                
+                                // Start recognition
+                                recognition.start();
+                
+                                // Event handler for when speech is recognized
+                                recognition.onresult = function (event) {
+                                    // Get the recognized text
+                                    var text = event.results[0][0].transcript;
+                
+                                    // Append the recognized text to the tooltip
+                                    tooltip.innerHTML += '<br>' + text;
+                
+                                    // Stop recognition
+                                    recognition.stop();
+                                };
+                
+                                // Event handler for when recognition is stopped
+                                recognition.onend = function () {
+                                    // Stop the microphone stream
+                                    stream.getTracks().forEach(track => track.stop());
+                                };
+                            })
+                            .catch(function (error) {
+                                console.error('Error accessing microphone:', error);
+                            });
+                    });
+                
+                    // Append the span tag to the tooltip
+                    tooltip.appendChild(spanTag);
+                
+                    // Add input event listener to handle text changes
+                    tooltip.addEventListener('input', function () {
+                        // Update the height only if it exceeds the current height
+                        if (tooltip.scrollHeight > tooltip.clientHeight) {
+                            tooltip.style.height = tooltip.scrollHeight + 'px';
+                        }
+                    });
+                
                     // Position the tooltip to the right of the rectangle
                     tooltip.style.left = (startX + rectangleWidth + 10) + 'px';
                     tooltip.style.top = startY + 'px';
@@ -227,6 +265,7 @@ function myEditpencilDrawBtn() {
                     // Append the tooltip to the body
                     document.body.appendChild(tooltip);
                 }
+                
             }
         }
     }
